@@ -26,11 +26,13 @@ sigma = zeros(1, size(X, 2));
 % Hint: You might find the 'mean' and 'std' functions useful.
 %       
 
+% Vectorized implementation
+mu = mean(X);
+sigma = std(X);
 
+ones_M = ones(size(X));
 
-
-
-
+X_norm = (X - (ones_M .* mu)) ./ (ones_M .* sigma);
 
 
 
