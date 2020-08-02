@@ -19,7 +19,12 @@ for iter = 1:num_iters
 
 
 
+    theta1 = theta(1) - (alpha/m) * sum(X(:, 1).*(X*theta-y));
+    theta2 = theta(2) - (alpha/m) * sum(X(:, 2).*(X*theta-y));
 
+    % Sync update of theta
+    theta(1) = theta1;
+    theta(2) = theta2;
 
 
 
