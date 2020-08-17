@@ -36,15 +36,10 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
-
-
-
-
-
-
-
-
-
+% Because the costFunctionReg from ex2 was already vectorized we use here
+addpath('../../machine-learning-ex2/ex2/');
+[J, grad] = costFunctionReg(theta, X, y, lambda);
+rmpath('../../machine-learning-ex2/ex2/');
 % =============================================================
 
 grad = grad(:);
