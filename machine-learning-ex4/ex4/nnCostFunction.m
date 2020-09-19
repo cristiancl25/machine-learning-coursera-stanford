@@ -39,6 +39,33 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 %
+
+% Feedforward neural network
+X = [ones(m,1) X];
+a2 = sigmoid(Theta1 * X');
+a2 = [ones(m,1) a2'];
+a3 = sigmoid(Theta2 * a2'); % Hipotesis
+
+% Recall that whereas the original labels (in the variable y) 
+% were 1, 2, ..., 10, for the purpose of training a neural
+% network, we need to recode the labels as vectors containing only values 0 or 1
+y_vector = zeros(num_labels, m); % 10*5000
+for i=1:m,
+  y_vector(y(i),i)=1;
+end
+% Cost function
+J = (1/m) * sum ( sum ( (-y_vector) .* log(a3) - (1-y_vector) .* log(1-a3) ));
+% Regularization
+
+% The terms of the bias are not regularized
+t1 = Theta1(:,2:size(Theta1,2));
+t2 = Theta2(:,2:size(Theta2,2));
+
+Reg = lambda  * (sum( sum ( t1.^ 2 )) + sum( sum ( t2.^ 2 ))) / (2*m);
+
+J = J + Reg;
+
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
@@ -53,6 +80,25 @@ Theta2_grad = zeros(size(Theta2));
 %         Hint: We recommend implementing backpropagation using a for-loop
 %               over the training examples if you are implementing it for the 
 %               first time.
+
+for t = 1:m
+    a1 = X(t,:)'; % Already has the bias unit
+    z2 = Theta1 * a1;
+    a2 = [1; sigmoid(z2)]; % Add the bias unit
+    z3 = Theta2 * a2;
+    a3 = sigmoid(z3);
+
+    delta_3 = a3 - y_vector(:,t);
+    delta_2 = (Theta2' * delta_3) .* sigmoidGradient([1;z2]);
+    delta_2 = delta_2(2:end);
+
+    Theta1_grad = Theta1_grad + delta_2 * a1';
+    Theta2_grad = Theta2_grad + delta_3 * a2';
+end;
+
+Theta1_grad = (1/m)*Theta1_grad;
+Theta2_grad = (1/m)*Theta2_grad;
+
 %
 % Part 3: Implement regularization with the cost function and gradients.
 %
@@ -62,6 +108,8 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) + ((lambda/m) * Theta1(:, 2:end));
+Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) + ((lambda/m) * Theta2(:, 2:end));
 
 
 
