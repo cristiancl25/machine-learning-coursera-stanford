@@ -24,6 +24,25 @@ sigma = 0.3;
 %
 
 
+i = 0; % Counter for the loop. Index of result_parameters
+result_parameters = zeros(64,3);
+
+for C_test = [0.01 0.03 0.1 0.3 1, 3, 10 30]
+    for sigma_test = [0.01 0.03 0.1 0.3 1, 3, 10 30]
+        i = i + 1;
+        model = svmTrain(X, y, C_test, @(x1, x2) gaussianKernel(x1, x2, sigma_test));
+        predictions = svmPredict(model, Xval);
+        prediction_error = mean(double(predictions ~= yval));
+
+        result_parameters(i,:) = [C_test, sigma_test, prediction_error];     
+    end
+end
+
+sorted = sortrows(result_parameters, 3);
+
+% After sorting, the first row has the C and sigma parameters with the lowest error.
+C = sorted(1,1);
+sigma = sorted(1,2);
 
 
 
