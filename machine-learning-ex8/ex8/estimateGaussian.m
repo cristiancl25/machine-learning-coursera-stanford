@@ -22,8 +22,14 @@ sigma2 = zeros(n, 1);
 %
 
 
+mu = sum(X) / m;
 
-
+% Transforms mu in a matrix with the same dimensions as X for substractin (X - mu)
+mu_matrix = zeros(m, n);
+for i=1:n
+    mu_matrix(:,i) = mu(i);
+end
+sigma2 = sum((X-mu_matrix).^2)/m;
 
 
 
